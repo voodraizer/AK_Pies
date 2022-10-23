@@ -137,44 +137,6 @@ class ViewOperatorRayCast(bpy.types.Operator):
 		else:
 			self.report({'WARNING'}, "Active space must be a View3d")
 			return {'CANCELLED'}
-		
-class ModalOperator(bpy.types.Operator):
-	"""Move an object with the mouse, example"""
-	bl_idname = "object.modal_operator"
-	bl_label = "Simple Modal Operator"
-
-	first_mouse_x: bpy.props.IntProperty()
-	first_value: bpy.props.FloatProperty()
-
-	def modal(self, context, event):
-		if event.type == 'MOUSEMOVE':
-			delta = self.first_mouse_x - event.mouse_x
-			context.object.location.x = self.first_value + delta * 0.01
-			bpy.context.window.cursor_modal_set("HAND")
-			bpy.context.window.cursor_set("HAND")
-
-		elif event.type == 'LEFTMOUSE':
-			return {'FINISHED'}
-
-		elif event.type in {'RIGHTMOUSE', 'ESC'}:
-			context.object.location.x = self.first_value
-			bpy.context.window.cursor_modal_restore()
-			bpy.context.window.cursor_modal_set("DEFAULT")
-			bpy.context.window.cursor_set("DEFAULT")
-			return {'CANCELLED'}
-
-		return {'RUNNING_MODAL'}
-
-	def invoke(self, context, event):
-		if context.object:
-			self.first_mouse_x = event.mouse_x
-			self.first_value = context.object.location.x
-			
-			context.window_manager.modal_handler_add(self)
-			return {'RUNNING_MODAL'}
-		else:
-			self.report({'WARNING'}, "No active object, could not finish")
-			return {'CANCELLED'}
 
 
 class AKM_MENUS_OT_delete_all_uvs(bpy.types.Operator):
@@ -683,7 +645,6 @@ class LoadMostRecent(bpy.types.Operator):
 
 
 classes = (
-	ModalOperator,
 	ViewOperatorRayCast,
 	AKM_MENUS_OT_delete_all_uvs,
 	AKM_MENUS_OT_set_smooth_180,
