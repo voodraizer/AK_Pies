@@ -455,6 +455,58 @@ class PIE_MT_AKM_Link(Menu):
 		pie.separator()
 
 
+class PIE_MT_PieNormals(Menu):
+	bl_idname = "PIE_MT_normals"
+	bl_label = "Pie Normals"
+	# Меню нормалей
+	# Выделить объекты с залоченными нормалями
+	# +++ Убрать залоченные нормали
+	# Стандартные операции с нормалями.
+	# Настройки показа нормалей
+	# выбрать хард софт эджи
+
+	def draw(self, context):
+		layout = self.layout
+		pie = layout.menu_pie()
+		# 4 - LEFT
+		box = pie.split().column()
+		box.operator("mesh.flip_normals", text="Flip")
+		box.operator("mesh.normals_make_consistent", text="Recalculate Outside").inside = False
+		box.operator("mesh.normals_make_consistent", text="Recalculate Inside").inside = True
+		# 6 - RIGHT
+		box = pie.split().column()
+		
+		if context.mode == "OBJECT":
+			box.operator("akm_menus.clear_split_normals", text="Clear split normals", icon='NONE')
+			box.operator("akm_menus.set_smooth_180", text="Set smooth (180)")
+			box.operator("object.shade_flat")
+			box.operator("object.shade_smooth")
+			box.operator("object.shade_smooth", text="Set autosmooth").use_auto_smooth=True
+
+		if context.mode == "EDIT_MESH":
+			box.operator("mesh.faces_shade_smooth", text="Smooth Faces")
+			box.operator("mesh.faces_shade_flat", text="Flat Faces")
+			box.operator("mesh.mark_sharp", text="Smooth Edges").clear = True
+			box.operator("mesh.mark_sharp", text="Sharp Edges")
+			props = box.operator("mesh.mark_sharp", text="Smooth Vertices")
+			props.use_verts = True
+			props.clear = True
+			box.operator("mesh.mark_sharp", text="Sharp Vertices").use_verts = True
+		
+		# 2 - BOTTOM
+		
+		# 8 - TOP
+		
+		# 7 - TOP - LEFT
+		
+		# 9 - TOP - RIGHT
+		
+		# 1 - BOTTOM - LEFT
+		
+		# 3 - BOTTOM - RIGHT
+		
+
+
 class PIE_MT_AKM_Modifiers(Menu):
 	bl_idname = "PIE_MT_akm_modifiers"
 	bl_label = "AKM Modifiers"
@@ -556,7 +608,8 @@ class PIE_MT_PieTest(Menu):
 		box_l.separator()
 		# box_l.operator("akm_menus.move_selected_to_active_collection", text="Move sel to collection")
 		# box_l.separator()
-		box_l.operator("akm_menus.splitnormals_clear", text="Clear custom split normals")
+		box_l.operator("akm_menus.clear_split_normals", text="Clear custom split normals")
+
 		
 
 		#4 - TOP
@@ -612,6 +665,7 @@ classes = (
 	WAZOU_PIE_Apply_Transforms,
 	PIE_MT_PieDelete,
 	PIE_MT_AKM_Link,
+	PIE_MT_PieNormals,
 	PIE_MT_AKM_Modifiers,
 	PIE_MT_SelectionsMore,
 	PIE_MT_ObjectLink,
